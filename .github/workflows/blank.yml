@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: AOSPDTGEN
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+   
+env:
+  # Change these values if you have forked it for your own works
+  GIT_USERNAME: "AzurE-007"
+  GIT_EMAIL: "azurehelper01@gmail.com"
+  Branch: "main"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure git and Store git Credentials
+        run: |
+          git config --global user.name $GIT_USERNAME
+          git config --global user.email $GIT_EMAIL
+          git config --global credential.helper store
+          echo "https://${GIT_USERNAME}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
+      
+      - name: Install Packages
+        run: |
+          sudo apt update
+          sudo apt install python3.9 python3-pip lzma cpio aria2 tmate neofetch speedtest-cli -y
+          sudo ln -sf /usr/bin/python3.9 /usr/bin/python3
+          sudo ln -sf /usr/bin/python3.9 /usr/bin/python
+          sudo ln -sf /usr/bin/pip3 /usr/bin/pip
+      - name: Clone Repo
+        run: |
+          git clone https://github.com/SebaUbuntu/aospdtgen.git AOSPDTGEN
+          git clone https://dumps.tadiphone.dev/dumps/xiaomi/raphael.git AOSPDTGEN/dumps
+      
+      - name: Run the Bot
+        working-directory: AOSPDTGEN
+        continue-on-error: true
+        timeout-minutes: 240
+        run: |
+          pip install .
+          python3 -m aospdtgen AOSPDTGEN/dumps
+
+
+
