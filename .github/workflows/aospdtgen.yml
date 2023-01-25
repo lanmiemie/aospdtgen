@@ -48,11 +48,11 @@ jobs:
         git clone https://github.com/SebaUbuntu/aospdtgen.git ./
         mkdir dumps
         cd dumps
-        git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./test/dumps
+        git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./
         
     - name: Run the aospdtgen
       working-directory: test
-      continue-on-error: false
+      continue-on-error: true
       timeout-minutes: 240
       run: |
         pip install .
