@@ -36,10 +36,11 @@ jobs:
           sudo ln -sf /usr/bin/python3.9 /usr/bin/python3
           sudo ln -sf /usr/bin/python3.9 /usr/bin/python
           sudo ln -sf /usr/bin/pip3 /usr/bin/pip
+          
       - name: Clone Repo
         run: |
           git clone https://github.com/SebaUbuntu/aospdtgen.git test
-          git clone https://dumps.tadiphone.dev/dumps/xiaomi/raphael.git test/dumps
+          git clone https://dumps.tadiphone.dev/dumps/xiaomi/mi_lx04.git test/dumps
       
       - name: Run the aospdtgen
         working-directory: test
