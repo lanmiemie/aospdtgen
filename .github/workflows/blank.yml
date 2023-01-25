@@ -40,7 +40,7 @@ jobs:
       - name: Clone Repo
         run: |
           git clone https://github.com/SebaUbuntu/aospdtgen.git test
-          git clone https://dumps.tadiphone.dev/dumps/xiaomi/mi_lx04.git test/dumps
+          git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git test/dumps
       
       - name: Run the aospdtgen
         working-directory: test
