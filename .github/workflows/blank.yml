@@ -44,7 +44,7 @@ jobs:
       
       - name: Run the aospdtgen
         working-directory: test
-        continue-on-error: true
+        continue-on-error: false
         timeout-minutes: 240
         run: |
           pip install .
