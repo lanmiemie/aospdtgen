@@ -10,13 +10,13 @@ on:
    
 env:
   # Change these values if you have forked it for your own works
-  GIT_USERNAME: "AzurE-007"
-  GIT_EMAIL: "azurehelper01@gmail.com"
+  GIT_USERNAME: "Lanmiemie"
+  GIT_EMAIL: "fatdeadpanda@163.com"
   Branch: "main"
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout
