@@ -39,8 +39,8 @@ jobs:
           
       - name: Clone Repo
         run: |
-          git clone https://github.com/SebaUbuntu/aospdtgen.git test
-          git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git test/dumps
+          git clone https://github.com/SebaUbuntu/aospdtgen.git ./test
+          git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./test/dumps
       
       - name: Run the aospdtgen
         working-directory: test
@@ -48,7 +48,7 @@ jobs:
         timeout-minutes: 240
         run: |
           pip install .
-          python3 -m aospdtgen test/dumps
+          python3 -m aospdtgen ./test/dumps
 
 
 
