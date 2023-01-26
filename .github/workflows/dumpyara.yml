@@ -52,7 +52,7 @@ jobs:
         #for img in *.bin; do zip payload.zip $img;done
         #git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./
         
-    - name: Run the aospdtgen
+    - name: Run the Payload Dumper
       working-directory: workspace
       continue-on-error: true
       timeout-minutes: 240
@@ -61,9 +61,19 @@ jobs:
         pip install six==1.16.0
         pip install bsdiff4==1.1.5
         python payloaddumper/payload_dumper.py dumps/payload.bin
-        cd payloaddumper/output
+        cd output
         for img in *.img; do zip payload.zip $img;done
         #python3 -m dumpyara dumps/payload.zip
+        
+    - name: Run the Payload Dumper
+      working-directory: workspace
+      continue-on-error: true
+      timeout-minutes: 240
+      run: |
+        git clone https://github.com/sebaubuntu-python/dumpyara ./dumpyara
+        pip3 install .
+        python3 -m dumpyara payload.zip
+        
         
     - uses: fastai/workflows/ssh@master
       with:
