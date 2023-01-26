@@ -42,22 +42,28 @@ jobs:
         
     - name: Clone Repo
       run: |
-        mkdir test
-        cd test
-        git clone https://github.com/sebaubuntu-python/dumpyara ./
+        mkdir workspace
+        cd workspace
+        git clone https://github.com/vm03/payload_dumper.git ./payloaddumper
+        #git clone https://github.com/sebaubuntu-python/dumpyara ./
         mkdir dumps
         cd dumps
-        curl https://cdn.cnbj1.fds.api.mi-img.com/xiaoqiang/rom/lx04/payload_2.38.105_d6447.bin > ./payload_2.38.105_d6447.bin
-        for img in *.bin; do zip payload.zip $img;done
+        curl https://cdn.cnbj1.fds.api.mi-img.com/xiaoqiang/rom/lx04/payload_2.38.105_d6447.bin > ./payload.bin
+        #for img in *.bin; do zip payload.zip $img;done
         #git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./
         
     - name: Run the aospdtgen
-      working-directory: test
+      working-directory: workspace
       continue-on-error: true
       timeout-minutes: 240
       run: |
-        pip install .
-        python3 -m dumpyara dumps/payload.zip
+        pip install protobuf==3.19.3
+        pip install six==1.16.0
+        pip install bsdiff4==1.1.5
+        python payloaddumper/payload_dumper.py dumps/payload.bin
+        cd payloaddumper/output
+        for img in *.img; do zip payload.zip $img;done
+        #python3 -m dumpyara dumps/payload.zip
         
     - uses: fastai/workflows/ssh@master
       with:
