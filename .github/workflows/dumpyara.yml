@@ -70,10 +70,36 @@ jobs:
       continue-on-error: true
       timeout-minutes: 240
       run: |
-        git clone https://github.com/sebaubuntu-python/dumpyara ./dumpyara
-        pip3 install .
-        python3 -m dumpyara payload.zip
+        git clone https://github.com/lanmiemie/dumpyara 
+        bash dumpyara/setup.sh
+        bash dumpyara/dumpyara.sh output/payload.zip
         
+    - name: Run the Aospdtgen
+      working-directory: workspace
+      continue-on-error: true
+      timeout-minutes: 240
+      run: |
+        git clone https://github.com/sebaubuntu-python/aospdtgen
+        pip install ./aospdtgen
+        sed -i '$a ro.product.first_api_level=27' /home/runner/work/aospdtgen/aospdtgen/workspace/dumpyara/working/payload/system/system/build.prop
+        python3 -m aospdtgen /home/runner/work/aospdtgen/aospdtgen/workspace/dumpyara/working/payload
+        cd /home/runner/work/aospdtgen/aospdtgen/workspace/dumpyara/working/payload
+        zip -r /home/runner/work/aospdtgen/aospdtgen/workspace/dtbdumps.zip *
+        cd /home/runner/work/aospdtgen/aospdtgen/workspace/output
+        zip -r /home/runner/work/aospdtgen/aospdtgen/workspace/devicetree.zip *
+        
+    - name: Upload to Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          /home/runner/work/aospdtgen/aospdtgen/workspace/dtbdumps.zip
+          /home/runner/work/aospdtgen/aospdtgen/workspace/devicetree.zip
+        name: ${{ github.run_id }}
+        tag_name: ${{ github.run_id }}
+        body: Device Tree & Dtbdumps
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
         
     - uses: fastai/workflows/ssh@master
       with:
