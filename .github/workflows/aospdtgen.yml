@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: dumpyara
+name: aospdtgen
 
 # Controls when the workflow will run
 on:
@@ -80,7 +80,7 @@ jobs:
       
     - name: Run the Aospdtgen
       working-directory: workspace
-      continue-on-error: true
+      continue-on-error: false
       timeout-minutes: 240
       run: |
         git clone https://github.com/sebaubuntu-python/aospdtgen
@@ -104,12 +104,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
-        
-    - uses: fastai/workflows/ssh@master
-      with:
-        ssh_key: ${{ secrets.SSH_KEY }}
-        key_file: id_ecdsa
-    - run: source ubuntu-run.sh
-    - name: Setup tmate session
-      timeout-minutes: 460
-      uses: mxschmitt/action-tmate@master
+      
