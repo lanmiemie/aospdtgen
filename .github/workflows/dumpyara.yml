@@ -17,6 +17,9 @@ env:
   GIT_EMAIL: "fatdeadpanda@163.com"
   Branch: "main"
 
+permissions:
+  contents: write
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
@@ -73,7 +76,8 @@ jobs:
         git clone https://github.com/lanmiemie/dumpyara 
         bash dumpyara/setup.sh
         bash dumpyara/dumpyara.sh output/payload.zip
-        
+    
+      
     - name: Run the Aospdtgen
       working-directory: workspace
       continue-on-error: true
@@ -92,8 +96,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          /home/runner/work/aospdtgen/aospdtgen/workspace/dtbdumps.zip
           /home/runner/work/aospdtgen/aospdtgen/workspace/devicetree.zip
+          /home/runner/work/aospdtgen/aospdtgen/workspace/dtbdumps.zip
         name: ${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: Device Tree & Dtbdumps
