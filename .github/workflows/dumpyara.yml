@@ -65,7 +65,7 @@ jobs:
         for img in *.img; do zip payload.zip $img;done
         #python3 -m dumpyara dumps/payload.zip
         
-    - name: Run the Payload Dumper
+    - name: Run the Dumpyara
       working-directory: workspace
       continue-on-error: true
       timeout-minutes: 240
