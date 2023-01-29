@@ -59,6 +59,7 @@ jobs:
       continue-on-error: true
       timeout-minutes: 240
       run: |
+        for zipota in downloadota/*.zip; do unzip -d ./tmp/ $zipota;done
         bash ${GITHUB_WORKSPACE}/scripts/check.sh
         #python3 -m dumpyara dumps/payload.zip
         
