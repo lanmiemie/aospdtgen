@@ -74,7 +74,7 @@ jobs:
       
     - name: Run the Aospdtgen
       working-directory: workspace
-      continue-on-error: false
+      continue-on-error: true
       timeout-minutes: 240
       run: |
         git clone https://github.com/sebaubuntu-python/aospdtgen
