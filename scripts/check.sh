@@ -1,4 +1,4 @@
-[ -f ./tmp/payload.bin ] && echo "payload.bin exists, proceed to the next step" && rm -rf ./output && wget https://github.com/lanmiemie/dumpyara/blob/master/payload-dumper-go?raw=true && ./payload-dumper-go tmp/payload.bin -output ./output/ && cd output && for img in *.img; do zip payload.zip $img;done && exit 1
+[ -f ./tmp/payload.bin ] && echo "payload.bin exists, proceed to the next step" && rm -rf ./output && wget https://github.com/lanmiemie/dumpyara/raw/master/payload-dumper-go && sudo chmod 7777 ./payload-dumper-go && ./payload-dumper-go -o ./output/ tmp/payload.bin && rm -rf downloadota && rm -rf tmp && cd output && for img in *.img; do zip ../payload.zip $img;done && cd ../ && rm -rf output && exit 1
 [ ! -f ./tmp/payload.bin ] && echo "payload.bin does not exist, Checking for system.img exists"
 [ -f ./tmp/system.img ] && echo "system.img exists, proceed to the next step" && for img in ./tmp/*.img; do zip payload.zip $img;done && exit 1
 [ ! -f ./tmp/system.img ] && echo "system.img does not exist,Failed" && exit 1
