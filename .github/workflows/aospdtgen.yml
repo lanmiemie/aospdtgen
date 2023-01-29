@@ -4,12 +4,12 @@ name: aospdtgen
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      OTALINK:
+        description: 'OTA link'
+        required: true
+        default: 'https://bigota.d.miui.com/V14.0.2.0.TLOCNXM/miui_XAGA_V14.0.2.0.TLOCNXM_c79ba02c33_13.0.zip'
 
 env:
   # Change these values if you have forked it for your own works
@@ -35,6 +35,7 @@ jobs:
         git config --global user.email $GIT_EMAIL
         git config --global credential.helper store
         echo "https://${GIT_USERNAME}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
+        
     - name: Install Packages
       run: |
         sudo apt update
@@ -43,7 +44,7 @@ jobs:
         sudo ln -sf /usr/bin/python3.8 /usr/bin/python
         sudo ln -sf /usr/bin/pip3 /usr/bin/pip
         
-    - name: Clone Repo
+    - name: Download OTA
       run: |
         mkdir workspace
         cd workspace
