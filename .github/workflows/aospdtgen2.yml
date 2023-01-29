@@ -1,0 +1,109 @@
+# This is a basic workflow to help you get started with Actions
+
+name: aospdtgen
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+    inputs:
+      OTALINK:
+        description: 'OTA link'
+        required: true
+        default: 'https://bigota.d.miui.com/V14.0.2.0.TLOCNXM/miui_XAGA_V14.0.2.0.TLOCNXM_c79ba02c33_13.0.zip'
+
+env:
+  # Change these values if you have forked it for your own works
+  GIT_USERNAME: "Lanmiemie"
+  GIT_EMAIL: "fatdeadpanda@163.com"
+  Branch: "main"
+
+permissions:
+  contents: write
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check Out
+      uses: actions/checkout@v3
+
+    - name: Configure git and Store git Credentials
+      run: |
+        git config --global user.name $GIT_USERNAME
+        git config --global user.email $GIT_EMAIL
+        git config --global credential.helper store
+        echo "https://${GIT_USERNAME}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
+        
+    - name: Install Packages
+      run: |
+        sudo apt update
+        sudo apt install python3.8 python3-pip lzma cpio aria2 tmate wget curl neofetch speedtest-cli wget -y
+        sudo ln -sf /usr/bin/python3.8 /usr/bin/python3
+        sudo ln -sf /usr/bin/python3.8 /usr/bin/python
+        sudo ln -sf /usr/bin/pip3 /usr/bin/pip
+        
+    - name: Download OTA
+      run: |
+        mkdir workspace
+        cd workspace
+        mkdir downloadota
+        cd downloadota
+        wget  ${{ github.event.inputs.OTALINK }}
+        #for img in *.bin; do zip payload.zip $img;done
+        #git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./
+        
+    - name: Checking Payload.bin or System.img exist
+      working-directory: workspace
+      continue-on-error: true
+      timeout-minutes: 240
+      run: |
+        bash ${GITHUB_WORKSPACE}/scripts/check.sh
+        #python3 -m dumpyara dumps/payload.zip
+        
+    - name: Run the Dumpyara
+      working-directory: workspace
+      continue-on-error: true
+      timeout-minutes: 240
+      run: |
+        git clone https://github.com/lanmiemie/dumpyara 
+        bash dumpyara/setup.sh
+        bash dumpyara/dumpyara.sh payload.zip
+    
+      
+    - name: Run the Aospdtgen
+      working-directory: workspace
+      continue-on-error: false
+      timeout-minutes: 240
+      run: |
+        git clone https://github.com/sebaubuntu-python/aospdtgen
+        pip install ./aospdtgen
+        #sed -i '$a ro.product.first_api_level=27' /home/runner/work/aospdtgen/aospdtgen/workspace/dumpyara/working/payload/system/system/build.prop
+        python3 -m aospdtgen /home/runner/work/aospdtgen/aospdtgen/workspace/dumpyara/working/payload
+        cd /home/runner/work/aospdtgen/aospdtgen/workspace/dumpyara/working/payload
+        zip -r /home/runner/work/aospdtgen/aospdtgen/workspace/dtbdumps.zip *
+        cd /home/runner/work/aospdtgen/aospdtgen/workspace/output
+        zip -r /home/runner/work/aospdtgen/aospdtgen/workspace/devicetree.zip *
+        
+    - name: Upload to Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          /home/runner/work/aospdtgen/aospdtgen/workspace/devicetree.zip
+          /home/runner/work/aospdtgen/aospdtgen/workspace/dtbdumps.zip
+        name: ${{ github.run_id }}
+        tag_name: ${{ github.run_id }}
+        body: Device Tree & Dtbdumps
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
+      
+    - uses: fastai/workflows/ssh@master
+      with:
+        ssh_key: ${{ secrets.SSH_KEY }}
+        key_file: id_ecdsa
+    - run: source ubuntu-run.sh
+    - name: Setup tmate session
+      timeout-minutes: 460
+      uses: mxschmitt/action-tmate@master
