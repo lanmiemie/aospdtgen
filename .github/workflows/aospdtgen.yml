@@ -52,7 +52,7 @@ jobs:
         #git clone https://github.com/sebaubuntu-python/dumpyara ./
         mkdir dumps
         cd dumps
-        curl ${OTALINK} > ./payload.bin
+        curl ${{ github.event.inputs.OTALINK }} > ./payload.bin
         #for img in *.bin; do zip payload.zip $img;done
         #git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./
         
