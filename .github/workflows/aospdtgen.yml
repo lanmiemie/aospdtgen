@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: aospdtgen
+name: aospdtgen (For XIAOMI-xiaoaitongxue)
 
 # Controls when the workflow will run
 on:
@@ -9,7 +9,7 @@ on:
       OTALINK:
         description: 'OTA link'
         required: true
-        default: 'https://bigota.d.miui.com/V14.0.2.0.TLOCNXM/miui_XAGA_V14.0.2.0.TLOCNXM_c79ba02c33_13.0.zip'
+        default: 'https://cdn.cnbj1.fds.api.mi-img.com/xiaoqiang/rom/lx04/payload_2.38.105_d6447.bin'
 
 env:
   # Change these values if you have forked it for your own works
@@ -52,7 +52,7 @@ jobs:
         #git clone https://github.com/sebaubuntu-python/dumpyara ./
         mkdir dumps
         cd dumps
-        curl https://cdn.cnbj1.fds.api.mi-img.com/xiaoqiang/rom/lx04/payload_2.38.105_d6447.bin > ./payload.bin
+        curl ${OTALINK} > ./payload.bin
         #for img in *.bin; do zip payload.zip $img;done
         #git clone https://github.com/lanmiemie/mi_lx04_dtbdumps.git ./
         
