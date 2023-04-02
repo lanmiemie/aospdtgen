@@ -77,6 +77,7 @@ jobs:
         git clone https://github.com/lanmiemie/dumpyara 
         bash dumpyara/setup.sh
         bash dumpyara/dumpyara.sh output/payload.zip
+        cp output/payload.zip /home/runner/work/aospdtgen/aospdtgen/workspace/
     
       
     - name: Run the Aospdtgen
@@ -99,12 +100,13 @@ jobs:
         files: |
           /home/runner/work/aospdtgen/aospdtgen/workspace/devicetree.zip
           /home/runner/work/aospdtgen/aospdtgen/workspace/dtbdumps.zip
+          /home/runner/work/aospdtgen/aospdtgen/workspace/payload.zip
         name: ${{ github.run_id }}
         tag_name: ${{ github.run_id }}
-        body: Device Tree & Dtbdumps
+        body: Device Tree & Dtbdumps & PayloadDumps
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      continue-on-error: true
+      continue-on-error: false
       
     - uses: fastai/workflows/ssh@master
       with:
